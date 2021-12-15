@@ -11,8 +11,9 @@ def connect():
     env_db_name = os.getenv('db_name')
     env_db_user = os.getenv('db_user')
     env_db_password = os.getenv('db_password')
+    env_db_port = int(os.getenv('db_port'))
     connect = pymysql.connect(
-        host=env_db_host, user=env_db_user, password=env_db_password, db=env_db_name, charset='utf8')
+        host=env_db_host, user=env_db_user, password=env_db_password, db=env_db_name, port=env_db_port,charset='utf8')
     return connect
 
 def connect_dict():
@@ -21,9 +22,9 @@ def connect_dict():
     env_db_name = os.getenv('db_stock_name')
     env_db_user = os.getenv('db_user')
     env_db_password = os.getenv('db_password')
+    env_db_port = os.getenv('prot')
     connect = pymysql.connect(
-        host=env_db_host, user=env_db_user, password=env_db_password, db=env_db_name,
-        charset='utf8')
+        host=env_db_host, user=env_db_user, password=env_db_password, db=env_db_name, port=env_db_port,charset='utf8')
     connect_dict = {
         'connect': connect,
         'cursor': connect.cursor(),

@@ -24,6 +24,7 @@ from db.connect import connect
 from lib.mysnowflake import IdWorker
 from utils.index import get_star_count, bootstrap_thread
 from utils.login import login_morning_star
+from utils.settings import is_cookie_login
 
 connect_instance = connect()
 cursor = connect_instance.cursor()
@@ -58,7 +59,7 @@ def text_to_be_present_in_element(locator, text, next_page_locator):
 
 def get_fund_list(page_index):
     morning_fund_selector_url = "https://www.morningstar.cn/fundselect/default.aspx"
-    chrome_driver = login_morning_star(morning_fund_selector_url, False)
+    chrome_driver = login_morning_star(morning_fund_selector_url, is_cookie_login)
     # 定义起始页码
     page_count = 25 # 晨星固定分页数
     page_total = math.ceil(int(chrome_driver.find_element_by_xpath(

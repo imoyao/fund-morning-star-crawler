@@ -8,6 +8,8 @@ Author: luxuemin2108@gmail.com
 Copyright (c) 2020 Camel Lu
 '''
 from threading import Lock
+
+from utils.settings import is_cookie_login
 from utils.login import login_morning_star
 from utils.index import bootstrap_thread
 from fund_info.crawler import FundSpider
@@ -28,7 +30,7 @@ def acquire_fund_base():
 
     def crawlData(start, end):
         login_url = 'https://www.morningstar.cn/membership/signin.aspx'
-        chrome_driver = login_morning_star(login_url, False)
+        chrome_driver = login_morning_star(login_url, is_cookie_login)
         page_start = start
         page_limit = 10
         # 遍历从基金列表的单支基金

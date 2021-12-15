@@ -16,6 +16,7 @@ from fund_info.crawler import FundSpider
 from fund_info.api import FundApier
 from fund_info.csv import FundCSV
 from lib.mysnowflake import IdWorker
+from utils.settings import is_cookie_login
 from utils.login import login_morning_star
 from utils.index import bootstrap_thread
 from sql_model.fund_query import FundQuery
@@ -48,7 +49,7 @@ def acquire_fund_quarter():
 
     def crawlData(start, end):
         login_url = 'https://www.morningstar.cn/membership/signin.aspx'
-        chrome_driver = login_morning_star(login_url, False)
+        chrome_driver = login_morning_star(login_url, is_cookie_login)
         page_start = start
         page_limit = 10
         while(page_start < end):

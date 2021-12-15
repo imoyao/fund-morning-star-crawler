@@ -10,8 +10,7 @@ src/temp_update_*
 abnormal
 demo/
 #outcome/stocks/
-output/json/
-!output/xlsx/
+output/
 .env
 
 # C extensions
@@ -23,3 +22,4 @@ output/json/
 build/
 develop-eggs/
 dist/
+venv/
