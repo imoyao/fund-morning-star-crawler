@@ -17,8 +17,10 @@ from src.acquire_fund_snapshot import get_fund_list
 from src.acquire_fund_base import acquire_fund_base
 from src.fund_info.supplement import FundSupplement
 from src.acquire_fund_quarter import acquire_fund_quarter
-from src.fund_statistic import get_special_fund_code_holder_stock_detail, all_stocks_rank,t100_stocks_rank,all_stock_holder_detail,calculate_quarter_fund_count
+from src.fund_statistic import get_special_fund_code_holder_stock_detail, all_stocks_rank, t100_stocks_rank, \
+    all_stock_holder_detail, calculate_quarter_fund_count
 from src.fund_strategy import output_high_score_funds
+
 
 def main():
     input_value = input("请输入下列序号执行操作:\n \
@@ -34,6 +36,7 @@ def main():
         10.“高分基金”\n \
     输入：")
     if input_value == '1' or input_value == '快照':
+        # 报错时修改index
         page_index = 1
         get_fund_list(page_index)  # 执行申万行业信息入库
     elif input_value == '2' or input_value == '新基入库':
@@ -62,5 +65,5 @@ def main():
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s',
-                        filename='log/crawler.log',  filemode='a', level=logging.INFO)
+                        filename='log/crawler.log', filemode='a', level=logging.INFO)
     main()

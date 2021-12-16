@@ -26,7 +26,7 @@ class FundUpdate:
 
     def update_archive_status(self, archive_value=0, *, fund_code=None):
       code = fund_code
-      if fund_code == None:
+      if fund_code is None:
           code = self.fund_code
       if archive_value == 0:
         print(code, '本来为0')
@@ -37,7 +37,7 @@ class FundUpdate:
 
     # 更新基金资产 -- fund_morning_quarter
     def update_fund_total_asset(self, fund_code, total_asset, quarter_index=None):
-        if quarter_index == None:
+        if quarter_index is None:
             quarter_index = self.quarter_index
         sql_update = "UPDATE fund_morning_quarter SET total_asset = %s WHERE fund_code = %s AND quarter_index = %s ;"
         self.cursor.execute(sql_update, [total_asset, fund_code, quarter_index])

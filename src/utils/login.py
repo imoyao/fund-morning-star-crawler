@@ -56,7 +56,7 @@ def identify_verification_code(chrome_driver, id="checkcodeImg"):
 
 # 模拟手动输入账号密码登录
 def mock_login_site(chrome_driver, site_url, redirect_url=None):
-    site_url = site_url if redirect_url == None else site_url + \
+    site_url = site_url if redirect_url is None else site_url + \
         '?ReturnUrl=' + redirect_url
     chrome_driver.get(site_url)
     time.sleep(2)

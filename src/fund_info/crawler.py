@@ -61,7 +61,7 @@ class FundSpider:
         # 判断是否页面出错，重定向，如果是的话跳过
         if self._chrome_driver.current_url == 'https://www.morningstar.cn/errors/defaulterror.html':
             return False
-        while self._chrome_driver.page_source == None:
+        while self._chrome_driver.page_source is None:
             self._chrome_driver.refresh()
             print('wait:fund_code', self.fund_code)
             sleep(9)
@@ -103,8 +103,8 @@ class FundSpider:
     def get_element_text_by_xpath(self, xpath, parent_id=None, parent_el=None):
         try:
             text = '-'
-            if parent_el == None:
-                text = self._chrome_driver.find_element_by_xpath(xpath).text if parent_id == None else self._chrome_driver.find_element_by_id(
+            if parent_el is None:
+                text = self._chrome_driver.find_element_by_xpath(xpath).text if parent_id is None else self._chrome_driver.find_element_by_id(
                     parent_id).find_element_by_xpath(xpath).text
             else:
                 text = parent_el.find_element_by_xpath(xpath).text
@@ -315,13 +315,13 @@ class FundSpider:
     def get_quarter_index(self):
         update_date = self.get_element_text_by_class_name(
             "date4", 'aspnetForm')
-        if(update_date == None):
+        if(update_date is None):
             self._chrome_driver.refresh()
             print('wait:fund_code', self.fund_code)
             sleep(9)
             update_date = self.get_element_text_by_class_name(
                 "date4", 'aspnetForm')
-        if update_date == None:
+        if update_date is None:
             return
         self.update_date = update_date
         split_dates = self.update_date.split('-', 1)

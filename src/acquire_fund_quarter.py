@@ -29,7 +29,7 @@ def get_total_asset(fund_code, platform):
     each_fund = FundApier(fund_code, end_date='2021-05-07', platform=platform)
     total_asset = each_fund.get_total_asset()
     # 如果在爱基金平台找不到，则到展恒基金找
-    if total_asset == None and platform == 'ai_fund':
+    if total_asset is None and platform == 'ai_fund':
         print("fund_code", total_asset, fund_code)
         each_fund = FundApier(
             fund_code, end_date='2021-05-10', platform='zh_fund')

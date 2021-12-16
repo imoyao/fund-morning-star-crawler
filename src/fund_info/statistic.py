@@ -14,14 +14,14 @@ import time
 import re
 import os
 import sys
-from pprint import pprint
+
 sys.path.append('../')
 sys.path.append(os.getcwd() + '/src')
 
 
 class FundStatistic:
     def __init__(self):
-      # 统计上一个季度
+        # 统计上一个季度
         last_quarter_time = time.localtime(time.time() - 3 * 30 * 24 * 3600)
         # time.strftime("%m-%d", last_quarter_time)
         year = time.strftime("%Y", last_quarter_time)
@@ -52,24 +52,24 @@ class FundStatistic:
         code_dict = dict()
         for result in results:
             # print(result)
-            totol_asset = result[2]
+            total_asset = result[2]
             for index in range(4, len(result), 3):
                 code = result[index]
                 name = result[index + 1]  # 仅以股票名称为key，兼容港股，A股
                 portion = result[index + 2]
-                if code == None or name == None:
-                    #print('index', index, 'code', code, 'name', name)
-                    #print('基金名称', result[1],'基金代码', result[0])
+                if code is None or name is None:
+                    # print('index', index, 'code', code, 'name', name)
+                    # print('基金名称', result[1],'基金代码', result[0])
                     continue
                 key = fisrt_match_condition_from_list(list(code_dict), code)
                 holder_asset = round(
-                    portion * totol_asset / 100, 4) if totol_asset and portion else 0
-                if key == None and code and name:
+                    portion * total_asset / 100, 4) if total_asset and portion else 0
+                if key is None and code and name:
                     key = str(code) + '-' + str(name)
-                if(key in code_dict and code != None):
+                if key in code_dict and code is not None:
                     count = code_dict[key]['count'] + 1
                     holder_asset = code_dict[key]['holder_asset'] + \
-                        holder_asset
+                                   holder_asset
                     code_dict[key] = {
                         'count': count,
                         'holder_asset': holder_asset
@@ -82,7 +82,7 @@ class FundStatistic:
         filer_dict = dict()
 
         for key, value in code_dict.items():  # for (key,value) in girl_dict.items() 这样加上括号也可以
-            if value['count'] > filter_count and key != None:
+            if value['count'] > filter_count and key is not None:
                 filer_dict[key] = value
                 # print(key + ":" + str(value))
         return sorted(filer_dict.items(), key=lambda x: x[1]['count'], reverse=True)
@@ -113,20 +113,20 @@ class FundStatistic:
                 '基金规模': result[2],
                 '股票总仓位': result[3],
             }
-            totol_asset = result[2]
+            total_asset = result[2]
             for index in range(4, len(result), 3):
                 code = result[index]
                 name = result[index + 1]
                 portion = result[index + 2]
-                if code == None or name == None:
+                if code is None or name is None:
                     continue
                 key = fisrt_match_condition_from_list(list(code_dict), code)
-                if key == None and code and name:
+                if key is None and code and name:
                     key = str(code) + '-' + str(name)
-                #key = str(name)
+                # key = str(name)
                 holder_asset = round(
-                    portion * totol_asset / 100, 4) if totol_asset and portion else 0
-                if(key in code_dict and code != None):
+                    portion * total_asset / 100, 4) if total_asset and portion else 0
+                if key in code_dict and code is not None:
                     code_dict[key]['count'] = code_dict[key]['count'] + 1
                     code_dict[key]['fund_list'].append({
                         **fund_info,
@@ -149,6 +149,7 @@ class FundStatistic:
         # print('code_dict.items()', code_dict.items())
         return list(code_dict.items())
         # return sorted(code_dict.items(), key=lambda x: x[1]['count'], reverse=True)
+
     # 分组查询特定股票的每个季度基金持有总数
 
     def item_stock_fund_count(self, stock_code, fund_code_pool=None):
@@ -169,7 +170,7 @@ class FundStatistic:
             for index in range(2, len(holders), 2):
                 code = holders[index]
                 if code == stock_code:
-                    portion = holders[index+1]
+                    portion = holders[index + 1]
                     holder_asset = round(
                         portion * total_asset / 100, 4) if total_asset and portion else 0
                     total_holder_asset = total_holder_asset + holder_asset
@@ -203,15 +204,16 @@ class FundStatistic:
             fund_ten_portion = fund_info[6]
             for index in range(7, len(fund_info), 3):
                 stock_code = fund_info[index]
-                stock_name = fund_info[index+1]
-                stock_portion = fund_info[index+2]
+                stock_name = fund_info[index + 1]
+                stock_portion = fund_info[index + 2]
                 stock_index = int((index - 4) / 3)
-                stock_list_industry = [fund_code, fund_name, fund_cat, fund_manager, fund_total_asset, fund_total_portion, fund_ten_portion,
+                stock_list_industry = [fund_code, fund_name, fund_cat, fund_manager, fund_total_asset,
+                                       fund_total_portion, fund_ten_portion,
                                        stock_code, stock_name, stock_portion, stock_index]
                 # holder_stock_industry_list.append(stock_list_industry]
                 if bool(re.search("^\d{6}$", stock_code)):
                     stock_list_industry_list = self.select_stock_pool_industry([
-                                                                               stock_code])
+                        stock_code])
                     stock_list_industry_dict = stock_list_industry_list[0]
                     industry_name_first = stock_list_industry_dict.get(
                         'industry_name_first')

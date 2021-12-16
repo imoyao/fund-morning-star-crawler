@@ -5,6 +5,7 @@ code-record/*
 *.py[cod]
 *$py.class
 .vscode/
+.idea/
 *fund_morning_star.csv
 src/temp_update_*
 abnormal

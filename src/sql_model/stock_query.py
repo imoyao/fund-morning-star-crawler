@@ -22,6 +22,7 @@ class StockQuery:
         self.dict_cursor.execute(query_stock_sql)
         results = self.dict_cursor.fetchall()
         return results
+
     # 查询股票对应行业
     def query_stock_industry(self, stock_code_pool):
         if isinstance(stock_code_pool, list):

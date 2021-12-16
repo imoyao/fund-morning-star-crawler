@@ -18,9 +18,9 @@ def output_high_score_funds(each_query=None, quarter_index=None):
     """
     输出高分基金
     """
-    if each_query == None:
+    if each_query is None:
         each_query = FundQuery()
-    if quarter_index == None:
+    if quarter_index is None:
         quarter_index = get_last_quarter_str()
     print("quarter_index", quarter_index)
     high_score_funds = each_query.select_high_score_funds(

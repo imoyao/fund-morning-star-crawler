@@ -123,7 +123,7 @@ class FundQuery(BaseQuery):
         last_year_time = time.localtime(time.time() - 365 * 24 * 3600)
         last_year_date = time.strftime('%Y-%m-%d', last_year_time)
 
-        if quarter_index == None:
+        if quarter_index is None:
             quarter_index = self.quarter_index
         sql = "SELECT a.fund_code, b.fund_name, a.investname_style, c.name, a.manager_start_date, b.found_date, a.morning_star_rating_3, \
            a.morning_star_rating_5, a.risk_assessment_sharpby, a.stock_position_total, a.stock_position_ten,\
@@ -153,7 +153,7 @@ class FundQuery(BaseQuery):
 
     def select_certain_condition_funds(self, *, quarter_index=None, morning_star_rating_5=None, morning_star_rating_3=None, manager_start_date=None, stock_position_total=None, stock_position_ten=None, **rest_dicts):
         print("rest_dicts", rest_dicts)
-        if quarter_index == None:
+        if quarter_index is None:
             quarter_index = self.quarter_index
 
         morning_star_rating_3_sql = self.format_sql(
@@ -270,7 +270,7 @@ class FundQuery(BaseQuery):
             " FROM fund_morning_stock_info as t LEFT JOIN fund_morning_quarter as u ON u.fund_code = t.fund_code AND u.quarter_index = t.quarter_index LEFT JOIN fund_morning_base as a ON a.fund_code = t.fund_code  WHERE u.quarter_index = %s AND t.stock_position_total > 20 " + \
             fund_code_list_sql + \
             ";"  # 大于20%股票持仓基金
-        if quarter_index == None:
+        if quarter_index is None:
             quarter_index = self.quarter_index
         self.cursor.execute(sql_query_quarter, [quarter_index])    # 执行sql语句
         results = self.cursor.fetchall()    # 获取查询的所有记录
@@ -306,7 +306,7 @@ class FundQuery(BaseQuery):
         """
         即将废弃
         """
-        if quarter_index == None:
+        if quarter_index is None:
             quarter_index = self.quarter_index
 
         select_stock_sql_join = ''
@@ -343,7 +343,7 @@ class FundQuery(BaseQuery):
     # total_asset 为null的基金
 
     def select_total_asset_is_null(self, quarter_index=None):
-        if quarter_index == None:
+        if quarter_index is None:
             quarter_index = self.quarter_index
         sql = 'SELECT fund_code FROM fund_morning_quarter as a WHERE a.quarter_index = %s AND a.total_asset IS NULL'
         self.cursor.execute(sql, [quarter_index])    # 执行sql语句
@@ -352,7 +352,7 @@ class FundQuery(BaseQuery):
 
     # 联表查某一个基金信息
     def select_special_fund_info(self, code, quarter_index=None):
-        if quarter_index == None:
+        if quarter_index is None:
             quarter_index = self.quarter_index
         stock_sql_join = ''
         for index in range(10):

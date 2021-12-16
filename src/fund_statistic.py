@@ -9,15 +9,14 @@ Author: luxuemin2108@gmail.com
 -----
 Copyright (c) 2020 Camel Lu
 '''
-import time
 import re
 import decimal
-from pprint import pprint
 import pandas as pd
 import numpy as np
 from fund_info.statistic import FundStatistic
 from utils.index import get_last_quarter_str, get_stock_market, find_from_list_of_dict, update_xlsx_file
 from utils.file_op import read_dir_all_file
+
 
 def get_fund_code_pool(condition_dict):
     each_statistic = FundStatistic()
@@ -40,12 +39,13 @@ def get_fund_code_pool(condition_dict):
 def stocks_compare(stock_list, *, market=None, quarter_index=None, is_A_stock=None):
     """与某个季度数据进行比较
     """
-    if quarter_index == None:
+    if quarter_index is None:
         quarter_index = get_last_quarter_str(2)
     print("比较-->quarter_index", quarter_index)
 
     last_quarter_input_file = './outcome/数据整理/strategy/all_stock_rank/' + quarter_index + '.xlsx'
-    data_last_quarter = pd.read_excel(io=last_quarter_input_file, engine="openpyxl",  dtype={"代码": np.str}, sheet_name=None)
+    data_last_quarter = pd.read_excel(io=last_quarter_input_file, engine="openpyxl", dtype={"代码": np.str},
+                                      sheet_name=None)
 
     if market:
         df_data_target_market = data_last_quarter.get(market)
@@ -74,8 +74,10 @@ def stocks_compare(stock_list, *, market=None, quarter_index=None, is_A_stock=No
                 target_loc[col_target].iloc[0]), 4)
         diff_holder_count = holder_count - last_holder_count
         diff_holder_asset = holder_asset - last_holder_asset
-        diff_holder_count_percent = '{:.2%}'.format(diff_holder_count / last_holder_count) if last_holder_count != 0 else "+∞"
-        diff_holder_asset_percent = '{:.2%}'.format(diff_holder_asset / last_holder_asset) if last_holder_asset != 0 else "+∞"
+        diff_holder_count_percent = '{:.2%}'.format(
+            diff_holder_count / last_holder_count) if last_holder_count != 0 else "+∞"
+        diff_holder_asset_percent = '{:.2%}'.format(
+            diff_holder_asset / last_holder_asset) if last_holder_asset != 0 else "+∞"
         # flag = '📈' if diff_holder_count > 0 else '📉'
         # if diff_holder_count == 0:
         #     flag = '⏸'
@@ -83,12 +85,13 @@ def stocks_compare(stock_list, *, market=None, quarter_index=None, is_A_stock=No
         flag_asset = 'up' if diff_holder_asset > 0 else 'down'
 
         item_tuple = [stock_code, stock_name, holder_count, last_holder_count,
-                      diff_holder_count, diff_holder_count_percent, flag_count, holder_asset, last_holder_asset, diff_holder_asset, diff_holder_asset_percent, flag_asset]
+                      diff_holder_count, diff_holder_count_percent, flag_count, holder_asset, last_holder_asset,
+                      diff_holder_asset, diff_holder_asset_percent, flag_asset]
         if is_A_stock:
             industry_name_third = stock_holder_detail.get('industry_name_third')
             industry_name_second = stock_holder_detail.get('industry_name_second')
             industry_name_first = stock_holder_detail.get('industry_name_first')
-            item_tuple = [*item_tuple, industry_name_third,industry_name_second, industry_name_first]
+            item_tuple = [*item_tuple, industry_name_third, industry_name_second, industry_name_first]
 
         # if diff_percent == "+∞" or not float(diff_percent.rstrip('%')) < -20:
         filter_list.append(item_tuple)
@@ -97,17 +100,17 @@ def stocks_compare(stock_list, *, market=None, quarter_index=None, is_A_stock=No
 
 
 def select_condition_stocks_rank(each_statistic=None, *, quarter_index=None):
-    if each_statistic == None:
+    if each_statistic is None:
         each_statistic = FundStatistic()
-    if quarter_index == None:
+    if quarter_index is None:
         quarter_index = get_last_quarter_str(1)
-    columns = ['代码','名称', '持有数量（只）', '持有市值（亿元）']
+    columns = ['代码', '名称', '持有数量（只）', '持有市值（亿元）']
     company = '广发基金管理有限公司'
     company_condition = {
         'value': company,
         'operator': '='
     }
-    output_file = './outcome/数据整理/stocks/condition/'+ company +'.xlsx'
+    output_file = './outcome/数据整理/stocks/condition/' + company + '.xlsx'
     condition_dict = {
         # 'morning_star_rating_5': morning_star_rating_5_condition,
         # 'morning_star_rating_3': morning_star_rating_3_condition,
@@ -131,17 +134,19 @@ def select_condition_stocks_rank(each_statistic=None, *, quarter_index=None):
 
     update_xlsx_file(output_file, df_stock_top_list, quarter_index)
 
+
 def t100_stocks_rank(each_statistic=None, *, quarter_index=None):
     # T100权重股排名
-    if each_statistic == None:
+    if each_statistic is None:
         each_statistic = FundStatistic()
-    if quarter_index == None:
+    if quarter_index is None:
         quarter_index = get_last_quarter_str(1)
     last_quarter_index = get_last_quarter_str(2)
     output_file = './outcome/数据整理/strategy/top100_rank.xlsx'
     sheet_name = quarter_index + '基金重仓股T100'
-    columns = ['代码','名称', quarter_index + '持有数量（只）', last_quarter_index + '持有数量（只）', '持有数量环比', '持有数量环比百分比', '持有数量升或降',  quarter_index + '持有市值（亿元）', last_quarter_index + '持有市值（亿元）', '持有市值环比', '持有市值环比百分比', '持有市值升或降']
-    
+    columns = ['代码', '名称', quarter_index + '持有数量（只）', last_quarter_index + '持有数量（只）', '持有数量环比', '持有数量环比百分比', '持有数量升或降',
+               quarter_index + '持有市值（亿元）', last_quarter_index + '持有市值（亿元）', '持有市值环比', '持有市值环比百分比', '持有市值升或降']
+
     stock_top_list = each_statistic.all_stock_fund_count(
         quarter_index=quarter_index,
         filter_count=80)
@@ -153,14 +158,15 @@ def t100_stocks_rank(each_statistic=None, *, quarter_index=None):
 
 
 def all_stocks_rank(each_statistic=None):
-    if each_statistic == None:
+    if each_statistic is None:
         each_statistic = FundStatistic()
     """所有股票排名
     """
     quarter_index = get_last_quarter_str(1)
     print("该quarter_index为", quarter_index)
     last_quarter_index = get_last_quarter_str(2)
-    columns = ['代码','名称', quarter_index + '持有数量（只）', last_quarter_index + '持有数量（只）', '持有数量环比', '持有数量环比百分比', '持有数量升或降',  quarter_index + '持有市值（亿元）', last_quarter_index + '持有市值（亿元）', '持有市值环比', '持有市值环比百分比', '持有市值升或降']
+    columns = ['代码', '名称', quarter_index + '持有数量（只）', last_quarter_index + '持有数量（只）', '持有数量环比', '持有数量环比百分比', '持有数量升或降',
+               quarter_index + '持有市值（亿元）', last_quarter_index + '持有市值（亿元）', '持有市值环比', '持有市值环比百分比', '持有市值升或降']
     output_file = './outcome/数据整理/strategy/all_stock_rank/' + quarter_index + '.xlsx'
 
     stock_top_list = each_statistic.all_stock_fund_count(
@@ -172,9 +178,9 @@ def all_stocks_rank(each_statistic=None):
     other_stock_list = []
     for stock_name_code in stock_top_list:
         stock_code = stock_name_code[0].split('-', 1)[0]
-        #path = 'other'
+        # path = 'other'
         if bool(re.search("^\d{5}$", stock_code)):
-            #path = '港股'
+            # path = '港股'
             hk_stock_list.append(stock_name_code)
         elif bool(re.search("^\d{6}$", stock_code)):
             # 'A股/深证主板'、'A股/创业板'、'A股/上证主板'、'A股/科创板'
@@ -201,9 +207,9 @@ def all_stocks_rank(each_statistic=None):
     a_stock_compare_list = stocks_compare(
         a_stock_list, market=a_market, quarter_index=last_quarter_index, is_A_stock=True)
     hk_stock_compare_list = stocks_compare(
-        hk_stock_list, market=hk_market, quarter_index=last_quarter_index,)
+        hk_stock_list, market=hk_market, quarter_index=last_quarter_index, )
     other_stock_compare_list = stocks_compare(
-        other_stock_list, market=other_market, quarter_index=last_quarter_index,)
+        other_stock_list, market=other_market, quarter_index=last_quarter_index, )
     a_columns = [*columns, '三级行业', '二级行业', '一级行业']
 
     df_a_list = pd.DataFrame(a_stock_compare_list, columns=a_columns)
@@ -227,9 +233,9 @@ def all_stock_holder_detail(each_statistic=None, *, quarter_index=None, threshol
         quarter_index (str, optional): 季度字符串. Defaults to None.
         threshold (int, optional): 输出门槛. Defaults to 0.
     """
-    if each_statistic == None:
+    if each_statistic is None:
         each_statistic = FundStatistic()
-    if quarter_index == None:
+    if quarter_index is None:
         quarter_index = get_last_quarter_str()
     stock_list = each_statistic.all_stock_fund_count_and_details(
         quarter_index=quarter_index,
@@ -263,9 +269,9 @@ def all_stock_holder_detail(each_statistic=None, *, quarter_index=None, threshol
 def get_special_fund_code_holder_stock_detail(each_statistic=None, quarter_index=None):
     """获取某些基金的十大持仓股票信息
     """
-    if each_statistic == None:
+    if each_statistic is None:
         each_statistic = FundStatistic()
-    if quarter_index == None:
+    if quarter_index is None:
         quarter_index = get_last_quarter_str()
         print("quarter_index", quarter_index)
     holder_history_list = [
@@ -334,7 +340,8 @@ def get_special_fund_code_holder_stock_detail(each_statistic=None, quarter_index
     fund_code_pool = list(fund_portfolio.keys())
     holder_stock_industry_list = each_statistic.summary_special_funds_stock_detail(fund_code_pool, quarter_index)
     path = './outcome/数据整理/funds/高分权益基金组合十大持仓明细.xlsx'
-    columns = ['基金代码', '基金名称', '基金类型', '基金经理', '基金总资产（亿元）', '基金股票总仓位', '十大股票仓位', '股票代码', '股票名称', '所占仓位', '所处仓位排名',  '三级行业', '二级行业', '一级行业']
+    columns = ['基金代码', '基金名称', '基金类型', '基金经理', '基金总资产（亿元）', '基金股票总仓位', '十大股票仓位', '股票代码', '股票名称', '所占仓位', '所处仓位排名',
+               '三级行业', '二级行业', '一级行业']
     df_a_list = pd.DataFrame(holder_stock_industry_list, columns=columns)
     # print("df_a_list", df_a_list)
 
@@ -358,11 +365,13 @@ def calculate_quarter_fund_count():
                 item_quarter_data = [sheet_name]
                 df_cur_sheet = xls.parse(sheet_name)
                 item_quarter_data.append(len(df_cur_sheet))
-                item_quarter_data.append(round(df_cur_sheet['持有市值(亿元)'].sum(),2))
+                item_quarter_data.append(round(df_cur_sheet['持有市值(亿元)'].sum(), 2))
                 quarter_list.append(item_quarter_data)
             columns = ["日期", "持有数量", '持有市值']
             df_quarter_list = pd.DataFrame(quarter_list, columns=columns)
             update_xlsx_file(path, df_quarter_list, sum_column_name)
+
+
 if __name__ == '__main__':
     # 所有股票的基金持仓细节
     # all_stock_holder_detail(each_statistic)
