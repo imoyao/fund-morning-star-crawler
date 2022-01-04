@@ -315,7 +315,7 @@ class FundSpider:
     def get_quarter_index(self):
         update_date = self.get_element_text_by_class_name(
             "date4", 'aspnetForm')
-        if(update_date is None):
+        if update_date is None:
             self._chrome_driver.refresh()
             print('wait:fund_code', self.fund_code)
             sleep(9)

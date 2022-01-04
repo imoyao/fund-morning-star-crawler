@@ -11,7 +11,6 @@ Copyright (c) 2020 Camel Lu
 
 from threading import Lock, current_thread
 from time import sleep
-from pprint import pprint
 from fund_info.crawler import FundSpider
 from fund_info.api import FundApier
 from fund_info.csv import FundCSV
@@ -21,6 +20,7 @@ from utils.login import login_morning_star
 from utils.index import bootstrap_thread
 from sql_model.fund_query import FundQuery
 from sql_model.fund_insert import FundInsert
+
 
 # 利用api获取同类基金的资产
 
@@ -36,10 +36,11 @@ def get_total_asset(fund_code, platform):
         total_asset = each_fund.get_total_asset()
     return total_asset
 
+
 def acquire_fund_quarter():
     lock = Lock()
     each_fund_query = FundQuery()
-    record_total = each_fund_query.get_crawler_quarter_fund_total()    # 获取记录条数
+    record_total = each_fund_query.get_crawler_quarter_fund_total()  # 获取记录条数
     print('record_total', record_total)
     idWorker = IdWorker()
     result_dir = './output/'
@@ -52,7 +53,7 @@ def acquire_fund_quarter():
         chrome_driver = login_morning_star(login_url, is_cookie_login)
         page_start = start
         page_limit = 10
-        while(page_start < end):
+        while (page_start < end):
             results = each_fund_query.select_quarter_fund(
                 page_start, page_limit)
             for record in results:
@@ -85,7 +86,7 @@ def acquire_fund_quarter():
                 if each_fund.stock_position['total'] != '0.00' and each_fund.total_asset != None:
                     each_fund.get_asset_composition_info()
                 # 爬取过程中是否有异常,有的话，存在csv中
-                if each_fund._is_trigger_catch == True:
+                if each_fund._is_trigger_catch:
                     fund_infos = [each_fund.fund_code, each_fund.morning_star_code,
                                   each_fund.fund_name, record[3],
                                   each_fund.stock_position['total'],
@@ -164,7 +165,7 @@ def acquire_fund_quarter():
                 if each_fund.fund_name.endswith('A'):
                     similar_name = each_fund.fund_name[0:-1]
                     results = each_fund_query.select_similar_fund(
-                        similar_name)    # 获取查询的所有记录
+                        similar_name)  # 获取查询的所有记录
                     platform = 'zh_fund' if '封闭' in similar_name else 'ai_fund'
                     for i in range(0, len(results)):
                         item = results[i]
@@ -188,6 +189,7 @@ def acquire_fund_quarter():
 
     bootstrap_thread(crawlData, record_total, 4)
     exit()
+
 
 if __name__ == '__main__':
     acquire_fund_quarter()
